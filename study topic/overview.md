@@ -3,9 +3,9 @@
 2. big o 계산 법
 
 # 알고리즘 스터디 순서
-1. backtracking
-2. bfs
-3. dfs
+1. backtracking - 완
+2. bfs - 완
+3. dfs - 완
 4. LIS
 5. 동적 계획법 기본
 6. 탐욕법
