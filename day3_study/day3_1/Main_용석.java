@@ -80,19 +80,22 @@ public class Main {
 
 
     public static void prioritys(int start){
-    	//priority queue 생
+    	//priority queue 생성
         PriorityQueue <Element> q = new <Element> PriorityQueue();
-        //시작지점은 0으로 설
+        //시작지점은 0으로 설정
         dist[start] = 0;
-        //queue에 새 element 추
+        //queue에 새 element 추가
         q.offer(new Element(start, dist[start]));
         
-        //q가 빌때까지 반
+        //q가 빌때까지 반복
         while(!q.isEmpty()){
+        	//queue의 distance와 index pick
             int cost = q.peek().getDistance();
             int here = q.peek().getIndex();
+            //queue에서 제
             q.poll();
             
+            //cost보다 dist가 큰 경우 while문 처음으
             if(cost > dist[here])
                 continue;
             
