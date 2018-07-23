@@ -1,117 +1,97 @@
-package com.algo;
-
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-/**
- * Created by ibyeongmu on 2017. 5. 4..
- */
-public class BJ_10999 {
-    static int start, seg[],lazy[];
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(bf.readLine());
+public class Main {
 
+   static int N;
+   static int K;
+   static long[] arr;
 
-        int N, M, K;
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
-        for (start = 1; start < N; start *= 2) ;
-        seg = new int[start *2 ];
-        lazy = new int[start*2];
+   static long[] tree;
+   static long[] lazy;
 
-        for (int i = 0; i < N; i++) {
-            int num = Integer.parseInt(bf.readLine());
-            update(i,num);
-//            seg[start + i] = Integer.parseInt(bf.readLine());
-        }
-        StringBuilder sb = new StringBuilder();
+   class SegmentTree {
 
-        for (int i = 0; i < M + K; i++) {
-            st = new StringTokenizer(bf.readLine());
-            int method = Integer.parseInt(st.nextToken());
+       SegmentTree() {
+           tree = new long[4 * N];
+           lazy = new long[4 * N];
+       }
 
+       void propa(int node, int start, int end) {
+           tree[node] *= lazy[node]* (end - start + 1);
+           if (lazy[node] != 0) {
+               lazy[node * 2] = lazy[node] * 2;
+               lazy[node * 2 + 1] = lazy[node] * 2;
 
-            if (method == 1) {
-                //update
-                int A = Integer.parseInt(st.nextToken());
-                int B = Integer.parseInt(st.nextToken());
-                int num = Integer.parseInt(st.nextToken());
-                A--;B--;
-                update_range(A,B,1,0,start-1,num);
-            } else if (method == 2) {
-                int A = Integer.parseInt(st.nextToken());
-                int B = Integer.parseInt(st.nextToken());
-                A--;B--;
-                sb.append(find(A,B,1,0,start-1)+"\n");
+           }
+           lazy[node] = 1;
+       }
 
+   }
 
-            }
-        }
-        System.out.println(sb);
-    }
-    static void update_range(int L,int R,int idx,int temp_L,int temp_R,int num){
+   public static void main(String[] args) throws Exception {
 
-        if(lazy[idx]!=0){
-            seg[idx]+=(temp_R-temp_L+1)*lazy[idx];
+       MyScanner sc = new MyScanner(System.in);
 
-            if(temp_R!=temp_L){
-                lazy[idx*2] +=lazy[idx];
-                lazy[idx*2+1]+=lazy[idx];
-            }
+       while (true) {
+           N = sc.nextInt();
+           K = sc.nextInt();
+           arr = new long[N + 1];
 
-            lazy[idx]=0;
-        }
-        if (L > temp_R || R < temp_L) return ;
+           for (int i = 0; i < K; i++) {
+               String text = sc.nextToken();
 
-        if(L<=temp_L&&temp_R<=R){
-            seg[idx]+= (temp_R-temp_L+1)*num;
+               if (text.equals("C")) {
+                   int number = sc.nextInt();
+                   long val = sc.nextLong();
 
-            if(temp_L!=temp_R){
-                lazy[idx*2]+=num;
-                lazy[idx*2+1]+=num;
-            }
-            return;
+               } else if (text.equals("P")) {
+                   int startnumber = sc.nextInt();
+                   int endnumber = sc.nextInt();
 
-        }
-        int mid = (temp_L+temp_R)/2;
+                   System.out.print("aa");
 
-        update_range(L,R,idx*2,temp_L,mid,num);
-        update_range(L,R,idx*2+1,mid+1,temp_R,num);
-        seg[idx] = seg[idx*2]+seg[idx*2+1];
-    }
+               }
+           }
+           System.out.println();
+       }
+   }
 
-    static void update(int idx, int val) {
-        int index = start + idx;
-        seg[index] = val;
+   static class MyScanner {
+       final BufferedReader reader;
+       final BufferedWriter writer;
+       StringTokenizer tokenizer = null;
 
-        while (index > 1) {
-            index /= 2;
-            seg[index] = seg[index * 2] + seg[index * 2 + 1];
-        }
-    }
+       MyScanner(InputStream in) {
+           reader = new BufferedReader(new InputStreamReader(in));
+           writer = new BufferedWriter(new OutputStreamWriter(System.out));
+       }
 
-    static int find(int L, int R, int idx, int temp_L, int temp_R) {
+       String nextToken() throws IOException {
+           if (tokenizer == null || !tokenizer.hasMoreTokens()) {
+               tokenizer = new StringTokenizer(reader.readLine());
+           }
+           return tokenizer.nextToken();
+       }
 
-        if(lazy[idx]!=0){
-            seg[idx]+=(temp_R-temp_L+1)*lazy[idx];
+       int nextInt() throws NumberFormatException, IOException {
+           return Integer.parseInt(nextToken());
+       }
 
-            if(temp_R!=temp_L){
-                lazy[idx*2] +=lazy[idx];
-                lazy[idx*2+1]+=lazy[idx];
-            }
+       long nextLong() throws NumberFormatException, IOException {
+           return Long.parseLong(nextToken());
+       }
 
-            lazy[idx]=0;
-        }
-        if (L > temp_R || R < temp_L) return 0;
+       void close() throws IOException {
+           reader.close();
+           writer.close();
+       }
+   }
 
-
-        if (L <= temp_L && temp_R <= R) return seg[idx];
-        int mid = (temp_L + temp_R) / 2;
-        return find(L, R, idx * 2, temp_L, mid) + find(L, R, idx * 2+1, mid + 1, temp_R);
-    }
 }
